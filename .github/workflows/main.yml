@@ -1,0 +1,27 @@
+name: Build and Run Custom NGINX Image
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-nginx:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -t custom-nginx .
+
+      - name: Run Docker container
+        run: |
+          docker run -d -p 8080:80 custom-nginx
+
+      - name: Test NGINX response
+        run: |
+          sleep 5
+          curl -I http://localhost:8080
